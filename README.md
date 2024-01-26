@@ -1,4 +1,4 @@
-Let program an autonomous with out HudStOn's help, Lets GOOOOOOO!
+Let's program an autonomous without HudStOn's help, Let's GOOOOOOO!
 
 
 

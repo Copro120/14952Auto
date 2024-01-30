@@ -1,31 +1,31 @@
 /* 
 "Roses" = #ff0000;
 "Violets" = #0000ff;
-
+Syntax is sweet,
+Boolean's are true.
+Everything is broken,
+What did you do.
 */
-// this code is very important, every program needs it.
-package org.firstinspires.ftc.teamcode;
+// this code is very important, every program needs it, Maybe.
+package org.firstinspires.ftc.teamcode;                         // the full package.
+//                                                                 _
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;        //  \ 
+import com.qualcomm.robotcore.util.Range;                       //  |
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;    //  \
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;          //   >individual libraries from FTC package.
+import com.qualcomm.robotcore.hardware.DcMotor;                 //  /
+import com.qualcomm.robotcore.util.ElapsedTime;                 //  |
+import com.qualcomm.robotcore.hardware.Servo;                   // _/
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
-
-// declares as TeleOp:
-@TeleOp(name="14952 TeleOp", group="Linear Opmode")
+@TeleOp(name="14952 TeleOp", group="Linear Opmode")             // declares as TeleOp:
 
 public class Yes extends LinearOpMode {
     
 
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle // <- Review for deletion
+    static final int    CYCLE_MS    =   50;     // period of each cycle                     //    But test first.
     
-    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();    // This is the elapsed runtime of the program.
     
     // wheel motors:
     private DcMotor leftFrontDrive;
@@ -35,19 +35,16 @@ public class Yes extends LinearOpMode {
     // four stage:
     private DcMotor extension;
     // hang kits:
-    private DcMotor leftHang;
+    private DcMotor leftHang; // I think that left or right is based on FPV.
     private DcMotor rightHang;
-    // servo
-    private Servo   servo;
-    private Servo   servo2;
-    private Servo   lservo;
-    double  position = 0.90;
-    double  position2 = 0;
-    boolean rampUp = true;
-
-
-    
-
+    // servos
+    private Servo   servo;  // upper arm servo.
+    private Servo   servo2; // lower arm servo / claw.
+    private Servo   lservo; // linear servo.
+    // these are for the servos slower movement:
+    double  servo_position = 0.90;
+    double  servo2_position = 0;
+    boolean rampUp = true;                                               // <- review for deletion.
 
     @Override
     public void runOpMode() {
@@ -66,7 +63,7 @@ public class Yes extends LinearOpMode {
         
     // this is an intresting function /
     //                               /
-    //                              \/ no one knows what it does?
+    //                              \/ 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -75,27 +72,27 @@ public class Yes extends LinearOpMode {
         rightHang.setDirection(DcMotor.Direction.FORWARD);
         extension.setDirection(DcMotor.Direction.FORWARD);
         
+
         
+        telemetry.addData("Status", "Initialized"); // Telemetry just shows the current value of the motors on the driver hub.
+        telemetry.update();                         // It's not necessary so we can delete it for preformance purposes.
 
-        // Waits for the game to start (driver presses PLAY)
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        waitForStart();
+        waitForStart(); // Waits for the game to start (driver presses PLAY). bet you couldn't tell.
         runtime.reset();
         
-        
-        servo.setPosition(0.90);
-        servo2.setPosition(-0.2);
+
+        servo.setPosition(0.90); // This is to help guarantee that the servo is in the correct position.
+        servo2.setPosition(-0.2);// Same here.
         
 
 
-        // run until the end of the match (driver presses STOP)
+        // this is the main loop that runs in the opmode.
         while (opModeIsActive()) {
-            double max;
+            double max;                                                         // <- review for deletion.
 
-            // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            //controler 1 left joystick to go forward & strafe, and right joystick to rotate.
+            double axial   = -gamepad1.left_stick_y;  // Note: pushing the stick forward gives a negative value.
             double lateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x / 2;
 
@@ -104,8 +101,8 @@ public class Yes extends LinearOpMode {
             double leftFrontPower  = ( yaw + (axial + lateral));
             double rightFrontPower = (-yaw + (axial - lateral));
             double leftBackPower   = ( yaw + (axial - lateral));
-            double rightBackPower  = (-yaw + (axial + lateral));
-
+            double rightBackPower  = (-yaw + (axial + lateral));    // By the way this code here is a great example of good optimization.
+                                                                    // Because instead of trying to set the power level sevral times
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
             leftFrontPower = Range.clip(leftFrontPower, -.98, .98);
@@ -115,7 +112,7 @@ public class Yes extends LinearOpMode {
             
             
 
-            // This is test code:
+            // This is test code: // this is outdated. // Don't worry about it.//
             //
             // Uncomment this code to test motor directions.
             // Each button should make the corresponding motor run FORWARD.
@@ -161,18 +158,18 @@ public class Yes extends LinearOpMode {
             //Servo
             if (gamepad2.x) {
                // 
-                if (position < 0.90) {
-                    position = position + 0.01;
-                    servo.setPosition(position);
+                if (servo_position < 0.90) {
+                    servo_position = servo_position + 0.01;
+                    servo.setPosition(servo_position);
                     sleep(CYCLE_MS);
                     idle();
                 }
             }
             if (gamepad2.y) {
                 //
-                if (position > 0.65) {
-                    position = position - 0.1;
-                    servo.setPosition(position);
+                if (servo_position > 0.65) {
+                    servo_position = servo_position - 0.1;
+                    servo.setPosition(servo_position);
                     sleep(CYCLE_MS);
                     idle();
                 }
@@ -189,18 +186,18 @@ public class Yes extends LinearOpMode {
             //inear actuator
             if (gamepad1.right_bumper) {
                // lservo.setPosition(1.0);
-            if (position2 < 0.60) {
-                    position2 = position2 + 0.10;
-                    lservo.setPosition(position2);
+            if (servo2_position < 0.60) {
+                servo2_position = servo2_position + 0.10;
+                    lservo.setPosition(servo2_position);
                     sleep(CYCLE_MS);
                     idle();
                 }
             }
             if (gamepad1.left_bumper) {
                 //lservo.setPosition(0.0);
-            if (position2 > 0.0) {
-                    position2 = position2 - 0.10;
-                    lservo.setPosition(position2);
+            if (servo2_position > 0.0) {
+                servo2_position = servo2_position - 0.10;
+                    lservo.setPosition(servo2_position);
                     sleep(CYCLE_MS);
                     idle();
                 }

@@ -43,7 +43,7 @@ public class Yes extends LinearOpMode {
     private Servo   lservo; // linear servo.
     // these are for the servos slower movement:
     double  servo_position = 0.90;
-    double  servo2_position = 0;
+    double  servo2_position = 0;  // linear servo actually.
     boolean rampUp = true;                                               // <- review for deletion.
 
     @Override
@@ -99,10 +99,11 @@ public class Yes extends LinearOpMode {
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
             double leftFrontPower  = ( yaw + (axial + lateral));
-            double rightFrontPower = (-yaw + (axial - lateral));
-            double leftBackPower   = ( yaw + (axial - lateral));
-            double rightBackPower  = (-yaw + (axial + lateral));    // By the way this code here is a great example of good optimization.
-                                                                    // Because instead of trying to set the power level sevral times
+            double rightFrontPower = (-yaw + (axial - lateral));    // By the way this code here is a great example of good optimization.
+            double leftBackPower   = ( yaw + (axial - lateral));    // Because instead of trying to set the power level sevral times
+            double rightBackPower  = (-yaw + (axial + lateral));    // It does the math first and then sets the power level.
+                                                                    
+                                                                    
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
             leftFrontPower = Range.clip(leftFrontPower, -.98, .98);
@@ -136,7 +137,7 @@ public class Yes extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
            
             
-            // Hanging Mechanism
+            // Hanging Mechanism                           // <-- If there is time, set a safety cap on this.
             if (gamepad2.left_bumper) {
                 leftHang.setPower(1.0);
                 rightHang.setPower(1.0);
@@ -147,28 +148,25 @@ public class Yes extends LinearOpMode {
                 rightHang.setPower(-1.0);
                 
             }
-            
-            extension.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
-            
-            
+            else {
             leftHang.setPower(0);
             rightHang.setPower(0);
+        }
             
-            
-            //Servo
+            // upper arm servo
             if (gamepad2.x) {
-               // 
+               // servo down
                 if (servo_position < 0.90) {
-                    servo_position = servo_position + 0.01;
+                    servo_position = servo_position + 0.01; // I need to check this to make an anjustment.
                     servo.setPosition(servo_position);
                     sleep(CYCLE_MS);
                     idle();
                 }
             }
             if (gamepad2.y) {
-                //
+                // servo up
                 if (servo_position > 0.65) {
-                    servo_position = servo_position - 0.1;
+                    servo_position = servo_position - 0.1; // This one too.
                     servo.setPosition(servo_position);
                     sleep(CYCLE_MS);
                     idle();
@@ -176,18 +174,18 @@ public class Yes extends LinearOpMode {
 
             }
             
-            //Servo2
+            // lower arm servo / claw
             if (gamepad2.a) {
-                servo2.setPosition(-0.2);
-            }
+                servo2.setPosition(-0.2);        // Between the upper servo and the lower servo, the upper servo moves smoothly
+            }                                    // But not the lower servo.
             if (gamepad2.b) {
                 servo2.setPosition(0.08);
             }
-            //inear actuator
-            if (gamepad1.right_bumper) {
-               // lservo.setPosition(1.0);
-            if (servo2_position < 0.60) {
-                servo2_position = servo2_position + 0.10;
+
+            // Lnear actuator
+            if (gamepad1.right_bumper) {                            // something intresting about the linear servo is that                                                               
+            if (servo2_position < 0.60) {                           // the position of the servo needs to be moved actively
+                servo2_position = servo2_position + 0.10;           // unlike the regular servos which move to position immediately.
                     lservo.setPosition(servo2_position);
                     sleep(CYCLE_MS);
                     idle();
@@ -209,8 +207,9 @@ public class Yes extends LinearOpMode {
                 extension.setPower(0.8);
             }
             while (gamepad2.b) {
-                extension.setPower(-0.4);
+                extension.setPower(-0.4);                                           // I'll egnore this. // For now.
             }*/
+            extension.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
             
             extension.setPower(0);
 

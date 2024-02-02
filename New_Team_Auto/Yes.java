@@ -21,9 +21,6 @@ import com.qualcomm.robotcore.hardware.Servo;                   // _/
 
 public class Yes extends LinearOpMode {
     
-
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle // <- Review for deletion
-    static final int    CYCLE_MS    =   50;     // period of each cycle                     //    But test first.
     
     private ElapsedTime runtime = new ElapsedTime();    // This is the elapsed runtime of the program.
     
@@ -44,8 +41,7 @@ public class Yes extends LinearOpMode {
     // these are for the servos slower movement:
     double  servo_position = 0.90;
     double  servo2_position = 0;  // linear servo actually.
-    boolean rampUp = true;                                               // <- review for deletion.
-
+    
     @Override
     public void runOpMode() {
 
@@ -89,7 +85,6 @@ public class Yes extends LinearOpMode {
 
         // this is the main loop that runs in the opmode.
         while (opModeIsActive()) {
-            double max;                                                         // <- review for deletion.
 
             //controler 1 left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // Note: pushing the stick forward gives a negative value.
@@ -141,7 +136,7 @@ public class Yes extends LinearOpMode {
             if (gamepad2.left_bumper) {
                 leftHang.setPower(1.0);
                 rightHang.setPower(1.0);
-                
+        
             }
             if (gamepad2.right_bumper) {
                 leftHang.setPower(-1.0);
@@ -159,7 +154,7 @@ public class Yes extends LinearOpMode {
                 if (servo_position < 0.90) {
                     servo_position = servo_position + 0.01; // I need to check this to make an anjustment.
                     servo.setPosition(servo_position);
-                    sleep(CYCLE_MS);
+                    sleep(50);
                     idle();
                 }
             }
@@ -168,7 +163,7 @@ public class Yes extends LinearOpMode {
                 if (servo_position > 0.65) {
                     servo_position = servo_position - 0.1; // This one too.
                     servo.setPosition(servo_position);
-                    sleep(CYCLE_MS);
+                    sleep(50);
                     idle();
                 }
 
@@ -187,7 +182,7 @@ public class Yes extends LinearOpMode {
             if (servo2_position < 0.60) {                           // the position of the servo needs to be moved actively
                 servo2_position = servo2_position + 0.10;           // unlike the regular servos which move to position immediately.
                     lservo.setPosition(servo2_position);
-                    sleep(CYCLE_MS);
+                    sleep(50);
                     idle();
                 }
             }
@@ -196,7 +191,7 @@ public class Yes extends LinearOpMode {
             if (servo2_position > 0.0) {
                 servo2_position = servo2_position - 0.10;
                     lservo.setPosition(servo2_position);
-                    sleep(CYCLE_MS);
+                    sleep(50);
                     idle();
                 }
             }
